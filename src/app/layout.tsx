@@ -1,3 +1,4 @@
+import CalendarView from '@/components/CalendarView'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -15,8 +16,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang='en'>
+      <body
+        className={
+          inter.className +
+          ' overflow-hidden max-h-screen h-screen max-w-[100vw] bg-white'
+        }
+      >
+        <div className='flex h-full'>
+          <CalendarView />
+          {children}
+        </div>
+      </body>
     </html>
   )
 }
