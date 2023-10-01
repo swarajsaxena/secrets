@@ -65,6 +65,9 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
           const isafter = isAfter(day, new Date())
           const noteExist =
             notesDates.find((date) => {
+              date.setHours(0o0)
+              date.setMinutes(0o0)
+
               return format(date, 'dd mm yy') === format(day, 'dd mm yy')
             }) === undefined
               ? false
@@ -73,8 +76,8 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
           return (
             <div
               className={twMerge(
-                'grid w-10 m-1 text-center place-items-center aspect-square opacity-90 cursor-pointer rounded-md  transition-all  text-base text-gray-950 font-semibold hover:bg-emerald-100 hover:text-emerald-950',
-                dayIsToday && 'border border-emerald-600',
+                'grid w-10 m-1 text-center place-items-center aspect-square opacity-90 cursor-pointer rounded-md  transition-all  text-base text-gray-950 font-medium hover:bg-emerald-100 hover:text-emerald-950 relative',
+                // dayIsToday && 'border border-emerald-600',
                 dayIsOfSameMonth && 'opacity-0',
                 noteExist && 'bg-emerald-600 text-white hover:bg-emerald-800',
                 isafter && 'hidden'
@@ -82,6 +85,9 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
               key={index}
             >
               {format(day, 'd')}
+              {dayIsToday && (
+                <div className='w-[6px] h-[6px] rounded-full bg-emerald-500 absolute -bottom-1 left-1/2 -translate-x-1/2' />
+              )}
             </div>
           )
         })}
