@@ -1,13 +1,23 @@
+@import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900);
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: Inter, sans-serif;
+}
+
+.codex-editor__redactor h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: rgb(5 150 105) !important;
 }
 
 .no-scroll::-webkit-scrollbar {
@@ -17,4 +27,19 @@
 .no-scroll {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+.ce-header {
+  padding: 0 !important;
+}
+
+.ce-block__content {
+  @apply hover:bg-emerald-50 active:bg-emerald-50 rounded-md;
+  padding: 0 0.5rem !important;
+}
+
+.codex-editor__redactor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }

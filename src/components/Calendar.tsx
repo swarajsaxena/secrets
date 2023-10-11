@@ -14,6 +14,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from 'date-fns'
+import Link from 'next/link'
 
 export interface CalendarProps {
   monthStarting: Date
@@ -63,6 +64,7 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
             new Date(firstDayCurrentMonth)
           )
           const isafter = isAfter(day, new Date())
+
           const noteExist =
             notesDates.find((date) => {
               date.setHours(0o0)
@@ -74,13 +76,14 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
               : true
 
           return (
-            <div
+            <Link
+              href={`/day/${format(day, 'yyyy-MM-dd')}`}
               className={twMerge(
-                'grid w-10 m-1 text-center place-items-center aspect-square opacity-90 cursor-pointer rounded-md  transition-all  text-base text-gray-950 font-medium hover:bg-emerald-100 hover:text-emerald-950 relative',
-                // dayIsToday && 'border border-emerald-600',
+                'grid w-10 m-1 text-center place-items-center aspect-square rounded-md hover:bg-emerald-100 hover:text-emerald-700  transition-all text-base opacity-80 relative font-medium',
                 dayIsOfSameMonth && 'opacity-0',
-                noteExist && 'bg-emerald-600 text-white hover:bg-emerald-800',
-                isafter && 'hidden'
+                noteExist &&
+                  'bg-emerald-600 text-white hover:bg-emerald-800 hover:text-white font-normal cursor-pointer',
+                isafter && 'opacity-25 pointer-events-none cursor-not-allowed'
               )}
               key={index}
             >
@@ -88,7 +91,7 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
               {dayIsToday && (
                 <div className='w-[6px] h-[6px] rounded-full bg-emerald-500 absolute -bottom-1 left-1/2 -translate-x-1/2' />
               )}
-            </div>
+            </Link>
           )
         })}
       </div>
