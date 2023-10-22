@@ -11,6 +11,7 @@ import Header from '@editorjs/header'
 import LinkTool from '@editorjs/link'
 import SimpleImage from '@editorjs/simple-image'
 import Quote from '@editorjs/quote'
+
 type Props = {
   data?: OutputData
   onChange(val: OutputData): void
@@ -36,6 +37,7 @@ const CustomEditor = ({ data, onChange, holder }: Props) => {
     if (!ref.current) {
       const editor = new EditorJs({
         holder: holder,
+        placeholder: 'Start Writing Here ...',
         tools: EDITOR_JS_TOOLS,
         data,
         async onChange(api, event) {
@@ -57,7 +59,7 @@ const CustomEditor = ({ data, onChange, holder }: Props) => {
   return (
     <div
       id={holder}
-      className='w-full prose max-w-full'
+      className='w-full prose max-w-full pt-2'
     />
   )
 }

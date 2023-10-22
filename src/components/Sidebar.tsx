@@ -4,11 +4,12 @@ import { calculateMonthsBetween, days, groupedByMonth } from '@/date/days'
 import { addMonths, format, getMonth, getYear } from 'date-fns'
 import React, { useEffect, useMemo, useState } from 'react'
 import Calendar from './Calendar'
-import { FiCalendar, FiList } from 'react-icons/fi'
+import { FiCalendar, FiChevronRight, FiList, FiMenu } from 'react-icons/fi'
 import { twMerge } from 'tailwind-merge'
 import Link from 'next/link'
 import ListView from './ListView'
 import CalendarView from './CalendarView'
+import SidebarDropdown from './SidebarDropdown'
 
 const Sidebar = () => {
   let [view, setView] = useState(0)
@@ -75,9 +76,10 @@ const Sidebar = () => {
   }, [isLastMonthCurrentMonth, monthsBetween, currentDate])
 
   return (
-    <aside className='flex flex-col border-r border-emerald-950/20 max-w-[353px] w-full'>
+    <aside className='flex flex-col border-r border-emerald-950/20 max-w-[353px] w-full shadow-lg'>
       <div className='border-b flex justify-between border-emerald-950/20 p-4 font-bold text-xl'>
-        <Link href={'/'}>Secrets</Link>
+        <SidebarDropdown />
+        <Link href={'/in'}>Secrets</Link>
         <div className='flex rounded-md overflow-hidden border text-sm border-emerald-950/30'>
           <div
             className={twMerge(

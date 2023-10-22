@@ -11,15 +11,6 @@
   font-family: Inter, sans-serif;
 }
 
-.codex-editor__redactor h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: rgb(5 150 105) !important;
-}
-
 .no-scroll::-webkit-scrollbar {
   display: none;
 }
@@ -29,17 +20,6 @@ h6 {
   scrollbar-width: none; /* Firefox */
 }
 
-.ce-header {
-  padding: 0 !important;
-}
-
-.ce-block__content {
-  @apply hover:bg-emerald-50 active:bg-emerald-50 rounded-md;
-  padding: 0 0.5rem !important;
-}
-
-.codex-editor__redactor {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.prose :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  margin: 1rem 0 0 !important;
 }

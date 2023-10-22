@@ -77,7 +77,7 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
 
           return (
             <Link
-              href={`/day/${format(day, 'yyyy-MM-dd')}`}
+              href={`/in/day/${format(day, 'yyyy-MM-dd')}`}
               className={twMerge(
                 'grid w-10 m-1 text-center place-items-center aspect-square rounded-md hover:bg-emerald-100 hover:text-emerald-700  transition-all text-base opacity-80 relative font-medium',
                 dayIsOfSameMonth && 'opacity-0',
