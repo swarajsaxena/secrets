@@ -8,6 +8,19 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        slideLeftAndFade: {
+          from: {
+            opacity: '0',
+            transform: 'translateX(16px) translateY(-8px)',
+          },
+          to: { opacity: '1', transform: 'translateX(16px) translateY(0px)' },
+        },
+      },
+      animation: {
+        slideDownAndFade:
+          'slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
