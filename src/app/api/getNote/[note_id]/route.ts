@@ -18,7 +18,6 @@ export async function GET(req: NextRequest) {
     const note = await Note.findById(noteId).exec()
 
     if (note) {
-      console.log(note)
       return Response.json({ note })
     } else {
       return Response.json({ error: 'Note not found' }, { status: 404 })

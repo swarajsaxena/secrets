@@ -13,7 +13,10 @@ const page = () => {
 
   useEffect(() => {
     days.forEach((day) => {
-      if (format(day.date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')) {
+      if (
+        format(new Date(day.date), 'yyyy-MM-dd') ===
+        format(new Date(), 'yyyy-MM-dd')
+      ) {
         setNotes(day.notes)
       }
     })
@@ -38,9 +41,9 @@ const page = () => {
                   <div className='font-medium capitalize text-lg'>
                     {note.title}
                   </div>
-                  <div className='line-clamp-1 text-sm'>{note.bodyContext}</div>
+                  <div className='line-clamp-1 text-sm'>{note.content}</div>
                   <div className='text-sm mt-4'>
-                    {format(note.dateEdited, 'EEE, MMM dd, yyyy')}
+                    {format(new Date(note.createdAt), 'EEE, MMM dd, yyyy')}
                   </div>
                 </div>
                 <div className='border-b border-emerald-950/20 w-full mx-4 my-2' />

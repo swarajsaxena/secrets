@@ -10,7 +10,7 @@ function ListView() {
     >
       {Object.keys(groupedByMonth).map((key, index) => {
         const notesForTheMonth = groupedByMonth[key]
-        const [month, year] = key.split(',') // console.log(notesForTheMonth)
+        const [month, year] = key.split(',')
 
         return (
           <div className='flex flex-col gap-2'>

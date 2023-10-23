@@ -2,7 +2,7 @@ import connectDB from '@/db'
 import { Note, User } from '@../../../src/model/model'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest } from 'next/server'
-import { v4 as uid } from 'uuid'
+import { DayI } from '@/date/days'
 import { format } from 'date-fns'
 
 export async function POST(req: NextRequest) {
@@ -20,8 +20,6 @@ export async function POST(req: NextRequest) {
     await newNote.save()
 
     if (!user) {
-      console.log('user exists')
-
       // Create a new user instance
       const newUser = new User({
         days: [{ date, monthYear, notes: [newNote.id] }],
@@ -37,26 +35,25 @@ export async function POST(req: NextRequest) {
         noteId: newNote.id,
       })
     } else {
-      console.log("user doesn't exists")
+      const days: DayI[] = user.days
 
-      const days = user.days
-
-      days.forEach((day) => {
-        if (
-          Number(day.monthYear[0]) === monthYear[0] &&
-          Number(day.monthYear[1]) === monthYear[1]
-        ) {
-          day.notes.push(newNote.id)
-          // console.log(days)
-        }
+      const day = days.find((day) => {
+        return new Date(day.date).getDate() === new Date(date).getDate()
       })
 
-      const updatedUser = User.findByIdAndUpdate(user._id, { days }).exec()
+      if (day) {
+        day.notes.push(newNote.id)
+      } else {
+        days.push({ date, monthYear, notes: [newNote._id] })
+      }
+
+      User.findByIdAndUpdate(user._id, { days }).exec()
+      await newNote.save()
 
       return Response.json({
         message: 'user exists.',
         noteId: newNote.id,
-        updatedUser,
+        days,
       })
     }
   } catch (error) {

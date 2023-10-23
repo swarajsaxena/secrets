@@ -1,6 +1,6 @@
 'use client'
 
-import { calculateMonthsBetween, days, groupedByMonth } from '@/date/days'
+import { DayI, calculateMonthsBetween, days, groupedByMonth } from '@/date/days'
 import { addMonths, format, getMonth, getYear } from 'date-fns'
 import React, { useEffect, useMemo, useState } from 'react'
 import Calendar from './Calendar'
@@ -10,13 +10,21 @@ import Link from 'next/link'
 import ListView from './ListView'
 import CalendarView from './CalendarView'
 import SidebarDropdown from './SidebarDropdown'
+import axios from 'axios'
+import Loading from './Loading'
 
 const Sidebar = () => {
   let [view, setView] = useState(0)
-  const firstMonth = getMonth(days[0].date)
-  const lastMonthMyUse = getMonth(days[days.length - 1].date)
+  let [days, setDays] = useState<DayI[]>()
+  const firstMonth = getMonth(!days ? new Date() : new Date(days[0].date))
+  const lastMonthMyUse = getMonth(
+    !days ? new Date() : new Date(days[days.length - 1].date)
+  )
   const [monthsBetween, setMonthsBetween] = useState(
-    calculateMonthsBetween(days[0].date, days[days.length - 1].date)
+    calculateMonthsBetween(
+      !days ? new Date() : new Date(days[0].date),
+      !days ? new Date() : new Date(days[days.length - 1].date)
+    )
   )
 
   // Get the current date
@@ -75,6 +83,15 @@ const Sidebar = () => {
     }
   }, [isLastMonthCurrentMonth, monthsBetween, currentDate])
 
+  useEffect(() => {
+    const fetchDays = async () => {
+      await axios.get(`/api/getDays`).then((res) => {
+        setDays(res.data.days)
+      })
+    }
+    fetchDays()
+  }, [])
+
   return (
     <aside className='flex flex-col border-r border-emerald-950/20 max-w-[353px] w-full shadow-lg'>
       <div className='border-b flex justify-between border-emerald-950/20 p-4 font-bold text-xl'>
@@ -102,10 +119,17 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-      {view == 0 ? (
-        <CalendarView monthsBetween={monthsBetween} />
+      {days ? (
+        view == 0 ? (
+          <CalendarView
+            monthsBetween={monthsBetween}
+            days={days}
+          />
+        ) : (
+          <ListView />
+        )
       ) : (
-        <ListView />
+        <Loading />
       )}
     </aside>
   )

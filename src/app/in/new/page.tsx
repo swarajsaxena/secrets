@@ -34,8 +34,6 @@ const page = ({ params }) => {
   })
 
   const createNewNote = async () => {
-    console.log('started')
-
     let year = getYear(new Date())
     let month = getMonth(new Date()) + 1
     let date = getDate(new Date())
@@ -48,7 +46,6 @@ const page = ({ params }) => {
         date: new Date(`${year}-${month}-${date}`),
       })
       .then((res) => {
-        console.log(`/in/entry/${res.data.noteId}`)
         router.push(`/in/entry/${res.data.noteId}`)
       })
   }

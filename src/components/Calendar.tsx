@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
   eachDayOfInterval,
@@ -15,6 +15,7 @@ import {
   startOfWeek,
 } from 'date-fns'
 import Link from 'next/link'
+import axios from 'axios'
 
 export interface CalendarProps {
   monthStarting: Date

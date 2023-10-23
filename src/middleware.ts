@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
     })
 
     if (session) {
-      // console.log('User name:', session)
+      console.log('url:', request.url)
     } else {
       return Response.json({ message: 'unauthorised' })
     }
@@ -22,5 +22,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/api/new',
+  matcher: [
+    '/api/new',
+    '/api/getNote/[note_id]',
+    '/api/getDays',
+    '/api/getDay/[day]',
+  ],
 }

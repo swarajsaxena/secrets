@@ -9,7 +9,6 @@ const page = () => {
   const router = useRouter()
 
   if (session) {
-    console.log(' ')
     router.push('/in')
   }
   return (

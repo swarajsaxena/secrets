@@ -2,13 +2,13 @@ import { groupedByMonth } from '@/date/days'
 import { format } from 'date-fns'
 import Calendar from './Calendar'
 
-function CalendarView(props) {
+function CalendarView({ monthsBetween, days }) {
   return (
     <div
       id='calendars'
       className='flex flex-col overflow-y-scroll no-scroll p-2'
     >
-      {props.monthsBetween.map(
+      {monthsBetween.map(
         (
           month: {
             year: number
@@ -27,9 +27,9 @@ function CalendarView(props) {
               </div>
               <Calendar
                 monthStarting={month.firstDay}
-                notesDates={groupedByMonth[`${month.month},${month.year}`]?.map(
-                  (item) => item.date
-                )}
+                notesDates={groupedByMonth(days)[
+                  `${month.month},${month.year}`
+                ]?.map((item) => new Date(item.date))}
               />
             </div>
           )

@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import MoreOptions from '@/components/entry/MoreOptions'
 import Link from 'next/link'
-import { EditorContent, useEditor } from '@tiptap/react'
+import { Content, EditorContent, useEditor } from '@tiptap/react'
 import Loading from '@/components/Loading'
 import { extensions } from '@/components/Editor/extensions'
 import { MenuBar } from '@/components/Editor/MenuBar'
@@ -19,6 +19,7 @@ const page = ({ params }) => {
   const { entry_id } = params
   const router = useRouter()
   let [note, setNote] = useState<NoteI | null>(null)
+  let [content, setContent] = useState<Content>()
   let [timeoutId, setTimeoutId] = useState(null)
   let [isSyncing, setIsSyncing] = useState(false)
   let [wordCount, setWordCount] = useState<number>(0)
@@ -39,21 +40,24 @@ const page = ({ params }) => {
     setTimeoutId(newTimeoutId)
   }
 
-  let editor = useEditor({
-    extensions: extensions,
-    content: note ? note.content : '12345',
-    editorProps: {
-      attributes: {
-        class:
-          'editor w-full max-w-[calc(650px+1rem)] prose prose-emerald outline-none',
+  let editor = useEditor(
+    {
+      extensions: extensions,
+      content: note?.content,
+      editorProps: {
+        attributes: {
+          class:
+            'editor w-full max-w-[calc(650px+1rem)] prose prose-emerald outline-none',
+        },
+      },
+      onUpdate({ editor }) {
+        setWordCount(getWords(editor.getJSON().content).length)
+        setCharCount(getWords(editor.getJSON().content).join('').length)
+        callAPI(editor.getHTML())
       },
     },
-    onUpdate({ editor }) {
-      setWordCount(getWords(editor.getJSON().content).length)
-      setCharCount(getWords(editor.getJSON().content).join('').length)
-      callAPI(editor.getHTML())
-    },
-  })
+    [note]
+  )
 
   const handleTitleChange = (e) => {
     setNote({ ...note, title: e.target.value })
@@ -81,6 +85,7 @@ const page = ({ params }) => {
     const fetchNote = async () => {
       await axios.get(`/api/getNote/${entry_id}`).then((res) => {
         setNote(res.data.note)
+        setContent(res.data.note.content)
       })
     }
     fetchNote()
@@ -92,11 +97,6 @@ const page = ({ params }) => {
       setCharCount(getWords(editor.getJSON().content).join('').length)
     }
   }, [editor])
-
-  useEffect(() => {
-    console.log(note)
-  }, [note])
-
   return (
     <ProtectedRoute>
       <div className='flex flex-col items-start w-full overflow-hidden'>
