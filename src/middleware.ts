@@ -1,21 +1,27 @@
-import { getToken } from 'next-auth/jwt'
-import { NextResponse } from 'next/server'
-import { NextRequest } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { getSession } from './utils/getSession'
 
 export async function middleware(request: NextRequest) {
   try {
-    const session = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    })
+    const { email } = await getSession(request)
+    console.log('url:', request.url)
 
-    if (session) {
-      console.log('url:', request.url)
-    } else {
-      return Response.json({ message: 'unauthorised' })
+    const url = new URL(request.url)
+
+    if (!email && url.pathname.includes('/in')) {
+      return NextResponse.redirect(new URL('/', request.url))
+    } else if (email && url.pathname === '/') {
+      return NextResponse.redirect(new URL('/in', request.url))
+    }
+
+    if (url.pathname.includes('/api')) {
+      if (!email) {
+        return NextResponse.json({ message: 'unauthorized' })
+      }
     }
   } catch (error) {
-    return Response.json({ message: error.message })
+    console.error('Error:', error)
+    return NextResponse.json({ error: error.message })
   }
 
   return NextResponse.next()
@@ -23,6 +29,11 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/',
+    '/in',
+    '/in/new',
+    '/in/entry/[entry_id]',
+    '/in/day/[day]',
     '/api/new',
     '/api/getNote/[note_id]',
     '/api/getDays',
