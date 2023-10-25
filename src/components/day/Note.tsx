@@ -13,10 +13,10 @@ const Note = ({ note }: { note: NoteI }) => {
       href={'/in/entry/' + note._id}
       className='w-full hover:bg-emerald-600 cursor-pointer group border border-emerald-950/20 p-4 rounded-md hover:border-transparent transition-all flex items-start gap-4 mb-4'
     >
-      <div className='flex-[0.75] group-hover:text-emerald-50 h-full flex flex-col justify-between'>
+      <div className='flex-[0.65] group-hover:text-emerald-50 h-full flex flex-col justify-between'>
         <div className='font-medium capitalize text-xl'>{note.title}</div>
         <div
-          className='line-clamp-2 text-sm mt-auto capitalize'
+          className='line-clamp-3 text-sm mt-auto capitalize'
           id={'content' + note._id}
         />
       </div>

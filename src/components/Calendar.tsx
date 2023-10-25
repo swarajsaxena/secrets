@@ -15,14 +15,18 @@ import {
   startOfWeek,
 } from 'date-fns'
 import Link from 'next/link'
-import axios from 'axios'
-
+import { motion } from 'framer-motion'
 export interface CalendarProps {
   monthStarting: Date
   notesDates?: Date[]
+  delayStart: number
 }
 
-const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
+const Calendar = ({
+  monthStarting,
+  notesDates = [],
+  delayStart,
+}: CalendarProps) => {
   const x = format(monthStarting, 'MMM-yyyy')
 
   monthStarting = parse(x, 'MMM-yyyy', new Date())
@@ -50,12 +54,17 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
       <div className='grid grid-cols-7 place-items-center w-max'>
         {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(
           (day: string, index: number) => (
-            <div
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                delay: delayStart,
+              }}
               key={index}
               className='grid w-10 m-1 text-center place-items-center aspect-square opacity-50'
             >
               {day}
-            </div>
+            </motion.div>
           )
         )}
         {daysInMonth.map((day, index) => {
@@ -77,22 +86,32 @@ const Calendar = ({ monthStarting, notesDates = [] }: CalendarProps) => {
               : true
 
           return (
-            <Link
-              href={`/in/day/${format(day, 'yyyy-MM-dd')}`}
-              className={twMerge(
-                'grid w-10 m-1 text-center place-items-center aspect-square rounded-md hover:bg-emerald-100 hover:text-emerald-700  transition-all text-base opacity-80 relative font-medium',
-                dayIsOfSameMonth && 'opacity-0',
-                noteExist &&
-                  'bg-emerald-600 text-white hover:bg-emerald-800 hover:text-white font-normal cursor-pointer',
-                isafter && 'opacity-25 pointer-events-none cursor-not-allowed'
-              )}
-              key={index}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                delay:
+                  delayStart +
+                  ((delayStart / 1 + 1) * 1 * index) / daysInMonth.length,
+              }}
             >
-              {format(day, 'd')}
-              {dayIsToday && (
-                <div className='w-[6px] h-[6px] rounded-full bg-emerald-500 absolute -bottom-1 left-1/2 -translate-x-1/2' />
-              )}
-            </Link>
+              <Link
+                href={`/in/day/${format(day, 'yyyy-MM-dd')}`}
+                className={twMerge(
+                  'grid w-10 m-1 text-center place-items-center aspect-square rounded-full hover:bg-emerald-100 hover:text-emerald-700  transition-all text-base opacity-80 relative font-medium',
+                  dayIsOfSameMonth && 'opacity-0',
+                  noteExist &&
+                    'bg-emerald-600 text-white hover:bg-emerald-800 hover:text-white font-normal cursor-pointer',
+                  isafter && 'opacity-25 pointer-events-none cursor-not-allowed'
+                )}
+                key={index}
+              >
+                {format(day, 'd')}
+                {dayIsToday && (
+                  <div className='w-[6px] h-[6px] rounded-full bg-emerald-500 absolute -bottom-1 left-1/2 -translate-x-1/2' />
+                )}
+              </Link>
+            </motion.div>
           )
         })}
       </div>

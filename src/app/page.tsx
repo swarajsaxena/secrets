@@ -5,12 +5,6 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const page = () => {
-  const { data: session } = useSession()
-  const router = useRouter()
-
-  if (session) {
-    router.push('/in')
-  }
   return (
     <div className='flex flex-col items-center justify-center w-full h-full'>
       hello

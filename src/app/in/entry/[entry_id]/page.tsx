@@ -1,14 +1,13 @@
 'use client'
 
-import { NoteI, days } from '@/date/days'
+import { NoteI } from '@/date/days'
 import { format } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { FiPlus, FiRefreshCw, FiUploadCloud } from 'react-icons/fi'
 import { useRouter } from 'next/navigation'
-import ProtectedRoute from '@/components/ProtectedRoute'
 import MoreOptions from '@/components/entry/MoreOptions'
 import Link from 'next/link'
-import { Content, EditorContent, useEditor } from '@tiptap/react'
+import { EditorContent, useEditor } from '@tiptap/react'
 import Loading from '@/components/Loading'
 import { extensions } from '@/components/Editor/extensions'
 import { MenuBar } from '@/components/Editor/MenuBar'
@@ -19,7 +18,6 @@ const page = ({ params }) => {
   const { entry_id } = params
   const router = useRouter()
   let [note, setNote] = useState<NoteI | null>(null)
-  let [content, setContent] = useState<Content>()
   let [timeoutId, setTimeoutId] = useState(null)
   let [isSyncing, setIsSyncing] = useState(false)
   let [wordCount, setWordCount] = useState<number>(0)
@@ -27,7 +25,6 @@ const page = ({ params }) => {
 
   const callAPI = (content: string) => {
     // Clear the previous timeout (if any)
-    setNote((prevNote) => ({ ...prevNote, content: content }))
     setIsSyncing(true)
     if (timeoutId) {
       clearTimeout(timeoutId)
@@ -47,13 +44,13 @@ const page = ({ params }) => {
       editorProps: {
         attributes: {
           class:
-            'editor w-full max-w-[calc(650px+1rem)] prose prose-emerald outline-none',
+            'editor w-full max-w-[calc(650px+1rem)] prose prose-emerald outline-none h-full',
         },
       },
       onUpdate({ editor }) {
         setWordCount(getWords(editor.getJSON().content).length)
         setCharCount(getWords(editor.getJSON().content).join('').length)
-        callAPI(editor.getHTML())
+        console.log('yay')
       },
     },
     [note]
@@ -85,7 +82,6 @@ const page = ({ params }) => {
     const fetchNote = async () => {
       await axios.get(`/api/getNote/${entry_id}`).then((res) => {
         setNote(res.data.note)
-        setContent(res.data.note.content)
       })
     }
     fetchNote()
@@ -98,7 +94,7 @@ const page = ({ params }) => {
     }
   }, [editor])
   return (
-    <ProtectedRoute>
+    <>
       <div className='flex flex-col items-start w-full overflow-hidden'>
         {note ? (
           <>
@@ -132,7 +128,7 @@ const page = ({ params }) => {
 
             <div className='flex flex-col w-full h-full items-center'>
               <MenuBar editor={editor} />
-              <div className='flex flex-col w-full items-center overflow-y-auto no-scroll max-h-full px-4'>
+              <div className='flex flex-col w-full items-center overflow-y-auto no-scroll max-h-full px-4 min-h-[75%]'>
                 <input
                   type='text'
                   className='py-4 w-full max-w-[calc(650px+1rem)] text-3xl font-bold placeholder:opacity-30 focus:outline-none'
@@ -143,7 +139,7 @@ const page = ({ params }) => {
                 <FloatingMenu editor={editor} />
                 <EditorContent
                   editor={editor}
-                  className='w-full max-w-[calc(650px+1rem)]'
+                  className='w-full max-w-[calc(650px+1rem)] min-h-[100%]'
                 />
               </div>
             </div>
@@ -152,7 +148,7 @@ const page = ({ params }) => {
           <Loading />
         )}
       </div>
-    </ProtectedRoute>
+    </>
   )
 }
 

@@ -1,6 +1,5 @@
 'use client'
 
-import ProtectedRoute from '@/components/ProtectedRoute'
 import { NoteI, days } from '@/date/days'
 import { format } from 'date-fns'
 import { signIn, signOut, useSession } from 'next-auth/react'
@@ -23,7 +22,7 @@ const page = () => {
   }, [])
 
   return (
-    <ProtectedRoute>
+    <>
       <div className='flex flex-col items-start w-full h-full'>
         <div className='relative flex items-center w-full justify-center p-5 px-4 border-b border-emerald-950/20'>
           Today • {format(new Date(new Date()), 'EEEE, MMMM dd, yyyy')}
@@ -56,7 +55,7 @@ const page = () => {
           )}
         </div>
       </div>
-    </ProtectedRoute>
+    </>
   )
 }
 

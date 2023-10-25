@@ -1,6 +1,7 @@
 import { groupedByMonth } from '@/date/days'
 import { format } from 'date-fns'
 import Calendar from './Calendar'
+import { motion } from 'framer-motion'
 
 function CalendarView({ monthsBetween, days }) {
   return (
@@ -22,10 +23,19 @@ function CalendarView({ monthsBetween, days }) {
               key={index}
               className='flex flex-col gap-2 my-5'
             >
-              <div className='font-bold text-slate-950/70 px-3'>
-                {format(month.firstDay, 'MMMM YYY')}
-              </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{
+                  delay: index,
+                }}
+              >
+                <div className='font-bold text-slate-950/70 px-3'>
+                  {format(month.firstDay, 'MMMM YYY')}
+                </div>
+              </motion.div>
               <Calendar
+                delayStart={index}
                 monthStarting={month.firstDay}
                 notesDates={groupedByMonth(days)[
                   `${month.month},${month.year}`

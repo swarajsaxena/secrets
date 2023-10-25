@@ -1,7 +1,6 @@
 'use client'
 
 import Loading from '@/components/Loading'
-import ProtectedRoute from '@/components/ProtectedRoute'
 import Note from '@/components/day/Note'
 import { NoteI, days } from '@/date/days'
 import axios from 'axios'
@@ -9,6 +8,7 @@ import { format } from 'date-fns'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { FiPlus } from 'react-icons/fi'
+import { motion } from 'framer-motion'
 
 const page = ({ params }) => {
   let [notes, setNotes] = useState<NoteI[]>([])
@@ -24,7 +24,7 @@ const page = ({ params }) => {
   }, [])
 
   return (
-    <ProtectedRoute>
+    <>
       <div className='flex flex-col items-start w-full max-h-screen'>
         <div className='relative flex items-center w-full justify-center p-5 px-4 border-b border-emerald-950/20'>
           <div className='text-xl font-bold mt-4 absolute left-4 top-1/2 -translate-y-full'>
@@ -40,14 +40,21 @@ const page = ({ params }) => {
         </div>
         <div className='flex flex-col items-start w-full justify-start p-4 max-h-full overflow-y-auto no-scroll pb-10'>
           {!loading ? (
-            notes.length !== 0 ? (
+            notes && notes.length !== 0 ? (
               notes.map((note, index) => (
-                <React.Fragment key={index}>
-                  <Note note={note} />
-                  {/* {index < notes.length - 1 && (
-                  <div className='border-b border-emerald-950/20 w-full mx-4 my-2' />
-                )} */}
-                </React.Fragment>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{
+                    delay: index * 0.2,
+                  }}
+                  className='w-full'
+                >
+                  <Note
+                    note={note}
+                    key={index}
+                  />
+                </motion.div>
               ))
             ) : (
               <div>No Entries..</div>
@@ -57,7 +64,7 @@ const page = ({ params }) => {
           )}
         </div>
       </div>
-    </ProtectedRoute>
+    </>
   )
 }
 
