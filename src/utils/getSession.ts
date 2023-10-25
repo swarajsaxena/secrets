@@ -7,11 +7,17 @@ export const getSession = async (req: NextRequest) => {
     secret: process.env.NEXTAUTH_SECRET,
   })
 
-  const data = {
-    name: session.name,
-    email: session.email,
-    picture: session.picture,
+  if (session) {
+    return {
+      name: session.name,
+      email: session.email,
+      picture: session.picture,
+    }
+  } else {
+    return {
+      name: null,
+      email: null,
+      picture: null,
+    }
   }
-
-  return data
 }

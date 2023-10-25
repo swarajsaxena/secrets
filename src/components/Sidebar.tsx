@@ -126,7 +126,7 @@ const Sidebar = () => {
             days={days}
           />
         ) : (
-          <ListView />
+          <ListView days={days} />
         )
       ) : (
         <Loading />
