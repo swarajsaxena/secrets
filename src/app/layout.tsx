@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { getServerSession } from 'next-auth'
 import SessionProvider from '../../src/components/SessionProvider'
+import TanstackProviders from '@/tanstack/TanstackProviders'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -25,7 +26,9 @@ export default async function RootLayout({
           ' overflow-hidden max-h-screen h-screen max-w-[100vw] bg-white'
         }
       >
-        <SessionProvider session={session}>{children}</SessionProvider>
+        <TanstackProviders>
+          <SessionProvider session={session}>{children}</SessionProvider>
+        </TanstackProviders>
       </body>
     </html>
   )

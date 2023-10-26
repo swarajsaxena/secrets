@@ -2,26 +2,22 @@
 
 import Loading from '@/components/Loading'
 import Note from '@/components/day/Note'
-import { NoteI, days } from '@/date/days'
-import axios from 'axios'
 import { format } from 'date-fns'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { FiPlus } from 'react-icons/fi'
 import { motion } from 'framer-motion'
+import { getNotesForOneDay } from '@/tanstack/queries'
+import Error from '@/components/Error'
 
 const page = ({ params }) => {
-  let [notes, setNotes] = useState<NoteI[]>([])
-  let [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchNotes = async () => {
-      const response = await axios.get(`/api/getDay?day=${params.day}`)
-      setNotes(response.data.notes)
-      setLoading(false)
-    }
-    fetchNotes()
-  }, [])
+  const {
+    isPending,
+    error,
+    data: notess,
+    isFetching,
+    isLoading,
+  } = getNotesForOneDay(params.day)
 
   return (
     <>
@@ -39,9 +35,11 @@ const page = ({ params }) => {
           </Link>
         </div>
         <div className='flex flex-col items-start w-full justify-start p-4 max-h-full overflow-y-auto no-scroll pb-10'>
-          {!loading ? (
-            notes && notes.length !== 0 ? (
-              notes.map((note, index) => (
+          {!(isFetching || isPending || isLoading) ? (
+            error ? (
+              <Error message={error.message} />
+            ) : notess && notess.length !== 0 ? (
+              notess.map((note, index) => (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -49,6 +47,7 @@ const page = ({ params }) => {
                     delay: index * 0.2,
                   }}
                   className='w-full'
+                  key={index}
                 >
                   <Note
                     note={note}
@@ -57,7 +56,13 @@ const page = ({ params }) => {
                 </motion.div>
               ))
             ) : (
-              <div>No Entries..</div>
+              <Link
+                href={'/in/new'}
+                className='px-8 py-8 text-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-700 flex gap-2 items-center w-full justify-center rounded-md'
+              >
+                Create An Entry
+                <FiPlus />
+              </Link>
             )
           ) : (
             <Loading />

@@ -1,21 +1,20 @@
 'use client'
 
-import { DayI, calculateMonthsBetween, days, groupedByMonth } from '@/date/days'
+import { calculateMonthsBetween } from '@/date/days'
 import { addMonths, format, getMonth, getYear } from 'date-fns'
 import React, { useEffect, useMemo, useState } from 'react'
-import Calendar from './Calendar'
-import { FiCalendar, FiChevronRight, FiList, FiMenu } from 'react-icons/fi'
+import { FiCalendar, FiList } from 'react-icons/fi'
 import { twMerge } from 'tailwind-merge'
 import Link from 'next/link'
 import ListView from './ListView'
 import CalendarView from './CalendarView'
 import SidebarDropdown from './SidebarDropdown'
-import axios from 'axios'
 import Loading from './Loading'
+import { getDays } from '@/tanstack/queries'
 
 const Sidebar = () => {
+  const { isFetching, isLoading, data: days, error } = getDays()
   let [view, setView] = useState(0)
-  let [days, setDays] = useState<DayI[]>()
   const firstMonth = getMonth(!days ? new Date() : new Date(days[0].date))
   const lastMonthMyUse = getMonth(
     !days ? new Date() : new Date(days[days.length - 1].date)
@@ -83,15 +82,6 @@ const Sidebar = () => {
     }
   }, [isLastMonthCurrentMonth, monthsBetween, currentDate])
 
-  useEffect(() => {
-    const fetchDays = async () => {
-      await axios.get(`/api/getDays`).then((res) => {
-        setDays(res.data.days)
-      })
-    }
-    fetchDays()
-  }, [])
-
   return (
     <aside className='flex flex-col border-r border-emerald-950/20 max-w-[353px] w-full shadow-lg'>
       <div className='border-b flex justify-between border-emerald-950/20 p-4 font-bold text-xl'>
@@ -119,7 +109,7 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-      {days ? (
+      {!(isFetching || isLoading) ? (
         view == 0 ? (
           <CalendarView
             monthsBetween={monthsBetween}

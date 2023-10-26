@@ -4,14 +4,14 @@ import { NoteI, days } from '@/date/days'
 import { format, getDate, getMonth, getYear } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { FiCheck, FiPlus } from 'react-icons/fi'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { EditorContent, useEditor } from '@tiptap/react'
 import { extensions } from '@/components/Editor/extensions'
 import { MenuBar } from '@/components/Editor/MenuBar'
 import { FloatingMenu } from '@/components/Editor/FloatingMenu'
 import Loading from '@/components/Loading'
-import axios from 'axios'
 import LoadingScreen from '@/components/LoadingScreen'
+import { postNote } from '@/tanstack/queries'
 
 const page = ({ params }) => {
   const router = useRouter()
@@ -19,6 +19,7 @@ const page = ({ params }) => {
   let [note, setNote] = useState<NoteI | null>(null)
   let [richText, setRichText] = useState('')
   let [loading, setLoading] = useState(false)
+  const { mutate: postNoteMutate, isPending } = postNote()
 
   let editor = useEditor({
     extensions: extensions,
@@ -40,17 +41,7 @@ const page = ({ params }) => {
     let date = getDate(new Date())
 
     setLoading(true)
-    await axios
-      .post('/api/new', {
-        content: richText,
-        title,
-        monthYear: [month - 1, year],
-        date: new Date(`${year}-${month}-${date}`),
-      })
-      .then((res) => {
-        setLoading(false)
-        router.push(`/in/entry/${res.data.noteId}`)
-      })
+    postNoteMutate({ richText, title, date, month, router, year })
   }
 
   useEffect(() => {
@@ -94,7 +85,7 @@ const page = ({ params }) => {
 
   return (
     <div className='flex flex-col items-start w-full overflow-hidden'>
-      <LoadingScreen open={loading} />
+      <LoadingScreen open={isPending} />
       <div className='relative flex items-center w-full justify-center p-5 px-4 border-b border-emerald-950/20'>
         {format(new Date(), 'EEEE, MMMM dd, yyyy')}
         <div
