@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       if (noteIds) {
         return Response.json({ notes }, { status: 200 })
       }
-      return Response.json({ day: null }, { status: 200 })
+      return Response.json({ notes: [] }, { status: 200 })
     } else {
       return Response.json({ error: 'No user' }, { status: 404 })
     }

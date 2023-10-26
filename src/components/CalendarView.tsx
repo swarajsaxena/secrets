@@ -20,7 +20,7 @@ function CalendarView({ monthsBetween, days }) {
         ) => {
           return (
             <div
-              key={index}
+              key={index + month.year + month.month}
               className='flex flex-col gap-2 my-5'
             >
               <motion.div

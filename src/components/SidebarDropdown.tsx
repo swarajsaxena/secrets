@@ -1,6 +1,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import {
   FiChevronRight,
@@ -13,6 +14,7 @@ import {
 
 const SidebarDropdown = () => {
   const { data: session } = useSession()
+  const router = useRouter()
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -44,7 +46,7 @@ const SidebarDropdown = () => {
             Profile
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            onClick={() => signOut()}
+            onClick={() => signOut().then(() => router.push('/'))}
             className='group text-sm font-medium leading-none rounded-[3px] hover:bg-emerald-500 hover:text-white flex items-center py-2 px-1 relative pl-6 select-none outline-none gap-2 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-white'
           >
             <FiLogOut />

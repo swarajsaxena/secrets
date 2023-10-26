@@ -1,8 +1,6 @@
-import { DayI, NoteI, groupedByMonth } from '@/date/days'
-import axios from 'axios'
+import { DayI, groupedByMonth } from '@/date/days'
 import { format } from 'date-fns'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Note from './ListView/Note'
 
 function ListView({ days }: { days: DayI[] }) {

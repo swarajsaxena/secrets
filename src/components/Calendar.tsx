@@ -16,6 +16,8 @@ import {
 } from 'date-fns'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
 export interface CalendarProps {
   monthStarting: Date
   notesDates?: Date[]
@@ -28,6 +30,9 @@ const Calendar = ({
   delayStart,
 }: CalendarProps) => {
   const x = format(monthStarting, 'MMM-yyyy')
+  const pathname = usePathname()
+  let [url, setUrl] = useState(pathname.split('/'))
+  let [activeDate, setActiveDate] = useState(url[url.length - 1])
 
   monthStarting = parse(x, 'MMM-yyyy', new Date())
 
@@ -94,6 +99,7 @@ const Calendar = ({
                   delayStart +
                   ((delayStart / 1 + 1) * 1 * index) / daysInMonth.length,
               }}
+              key={index + day.getDay()}
             >
               <Link
                 href={`/in/day/${format(day, 'yyyy-MM-dd')}`}
@@ -102,13 +108,18 @@ const Calendar = ({
                   dayIsOfSameMonth && 'opacity-0',
                   noteExist &&
                     'bg-emerald-600 text-white hover:bg-emerald-800 hover:text-white font-normal cursor-pointer',
-                  isafter && 'opacity-25 pointer-events-none cursor-not-allowed'
+                  isafter &&
+                    'opacity-25 pointer-events-none cursor-not-allowed',
+                  pathname.includes('/in/day/') &&
+                    format(day, 'yyyy-MM-dd') === activeDate &&
+                    'bg-emerald-950 text-emerald-50'
                 )}
                 key={index}
+                onClick={() => setActiveDate(format(day, 'yyyy-MM-dd'))}
               >
                 {format(day, 'd')}
                 {dayIsToday && (
-                  <div className='w-[6px] h-[6px] rounded-full bg-emerald-500 absolute -bottom-1 left-1/2 -translate-x-1/2' />
+                  <div className='w-[8px] h-[4px] rounded-full bg-emerald-600 absolute -bottom-[10px] left-1/2 -translate-x-1/2' />
                 )}
               </Link>
             </motion.div>

@@ -16,11 +16,11 @@ const Note = ({ note }: { note: NoteI }) => {
       <div className='flex-[0.65] group-hover:text-emerald-50 h-full flex flex-col justify-between'>
         <div className='font-medium capitalize text-xl'>{note.title}</div>
         <div
-          className='line-clamp-3 text-sm mt-auto capitalize'
+          className='line-clamp-2 text-sm mt-4 capitalize flex items-start justify-end h-[40px] flex-col'
           id={'content' + note._id}
         />
       </div>
-      <div className='min-w-max ml-auto flex flex-col items-center p-2 bg-emerald-100 text-emerald-600 rounded-md'>
+      <div className='min-w-max ml-auto flex flex-col items-center p-2 bg-emerald-100 text-emerald-600 rounded-md h-full'>
         <div className='font-bold uppercase'>
           {format(new Date(note.createdAt), 'MMM dd')}
         </div>

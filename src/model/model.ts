@@ -43,7 +43,7 @@ const UserSchema = new mongoose.Schema({
   ],
 })
 
-const Note = mongoose.models.notes || mongoose.model('notes', NoteSchema)
-const User = mongoose.models.users || mongoose.model('users', UserSchema)
+const Note = mongoose.models?.notes || mongoose.model('notes', NoteSchema)
+const User = mongoose.models?.users || mongoose.model('users', UserSchema)
 
 export { Note, User }

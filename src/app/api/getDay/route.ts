@@ -1,7 +1,7 @@
 import connectDB from '@/db'
 import { Note, User } from '@/model/model'
 import { getSession } from '@/utils/getSession'
-import { format } from 'date-fns'
+import { format, isValid } from 'date-fns'
 import { NextRequest } from 'next/server'
 
 export async function GET(req: NextRequest) {
@@ -18,16 +18,17 @@ export async function GET(req: NextRequest) {
     let noteIds
     if (user) {
       user.days.forEach((element) => {
-        if (format(new Date(element.date), 'yyyy-MM-dd') === day) {
+        const x = new Date(element.date)
+        if (isValid(x) && format(x, 'yyyy-MM-dd') === day) {
           noteIds = element.notes
         }
       })
 
       const notes = await Note.find({ _id: { $in: noteIds } }).exec()
-      if (noteIds) {
+      if (notes) {
         return Response.json({ notes }, { status: 200 })
       }
-      return Response.json({ day: null }, { status: 200 })
+      return Response.json({ notes: null }, { status: 200 })
     } else {
       return Response.json({ error: 'No user' }, { status: 404 })
     }

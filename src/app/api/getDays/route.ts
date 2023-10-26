@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     if (user) {
       return Response.json({ days: user.days }, { status: 200 })
     } else {
-      return Response.json({ error: 'No Days' }, { status: 404 })
+      return Response.json({ error: 'No Days', days: [] }, { status: 404 })
     }
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 })
